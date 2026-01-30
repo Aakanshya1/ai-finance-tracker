@@ -7,3 +7,7 @@
 - Added initial documentation files
 - Defined tech stack and project goals
 
+# Day 2
+- setup mongodb connection
+- setup express server
+- designed a secure and scalable user model
