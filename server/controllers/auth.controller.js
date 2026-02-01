@@ -1,9 +1,9 @@
-import User from "../models/User";
+import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
-const registerUser = async (req,res)=>{
+export const registerUser = async (req,res)=>{
     try {
         const {name,email,password}=req.body;
         const existingUser= await User.findOne({email});
@@ -34,10 +34,11 @@ const registerUser = async (req,res)=>{
     }
 }
 
-const loginUser = async(req,res)=>{
+export const loginUser = async(req,res)=>{
     try {
         const {email,password}=req.body;
-        const user = await User.findOne({email})
+
+        const user = await User.findOne({email}).select("+password");;
         if(!user){
             return res.status(400)
             .json({
@@ -65,8 +66,8 @@ const loginUser = async(req,res)=>{
     } catch (error) {
         return res.status(500)
         .json({
-            message:"Server error",error:error.message
+            message:"Server error",error:error.message,
         })
+  
     }
 }
-export default {registerUser,loginUser};
