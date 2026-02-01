@@ -1,5 +1,5 @@
 # AI Expense Tracker
 
-A full-stack expense tracker with AI power insights.
+A full-stack finance tracker with AI power insights.
 
 
