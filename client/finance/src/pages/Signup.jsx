@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import {IoMdMail} from 'react-icons/io'
 import {IoMdEye,IoMdEyeOff} from 'react-icons/io'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { registerUser } from '../services/authService'
 function Signup() {
     const [signupInfo,setSignupInfo]=useState({
         name:"",
@@ -14,6 +16,7 @@ function Signup() {
     });
     const [isVisible,setIsVisible]=useState(false);
     const [errors,setErrors]=useState(null);
+    const navigate=useNavigate();
     const handleChange=(e)=>{
         const {name,value}=e.target;
         setSignupInfo({
@@ -22,7 +25,7 @@ function Signup() {
         });
         setErrors({...errors,[name]:""});
     }
-    const handleSubmit=(e)=>{
+    const handleSubmit= async(e)=>{
         e.preventDefault();
         const {name,email,password,confirmPassword}=signupInfo;
 
@@ -40,10 +43,17 @@ function Signup() {
             newErrors.confirmPassword="Passwords do not match";
         }
         if(Object.keys(newErrors).length>0){
- setErrors(newErrors);
+         setErrors(newErrors);
         }
         if(!newErrors.email && !newErrors.password && !newErrors.name && !newErrors.confirmPassword){
             alert('signup successful')
+        }
+        try {
+            const res = await registerUser(signupInfo);
+            alert('signup successful');
+            navigate('/login');
+        } catch (error) {
+             setErrors({general:error.response?.data?.message || "Signup failed"});
         }
  
     }

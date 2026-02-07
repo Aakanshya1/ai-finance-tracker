@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom'
 import {IoMdMail} from 'react-icons/io'
 import {IoMdEye,IoMdEyeOff} from 'react-icons/io'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../services/authService'
+
 function Login() {
     const [loginInfo,setLoginInfo]=useState({
         email:"",
@@ -12,7 +15,7 @@ function Login() {
     });
     const [isVisible,setIsVisible]=useState(false);
     const [errors,setErrors]=useState(null);
-
+    const navigate=useNavigate();
 
     const handleChange=(e)=>{
         const {name,value}=e.target;
@@ -22,10 +25,10 @@ function Login() {
         });
         setErrors({...errors,[name]:""});
     }
-    const handleSubmit=(e)=>{
+    const handleSubmit= async(e)=>{
         e.preventDefault();
         const {email,password}=loginInfo;
-
+console.log(loginInfo);
         let newErrors={};
         if(!email){
             newErrors.email="Email is required";
@@ -36,8 +39,14 @@ function Login() {
         if(Object.keys(newErrors).length>0){
  setErrors(newErrors);
         }
-        if(!newErrors.email && !newErrors.password){
-            alert('login successful')
+        try {
+            const res = await loginUser(loginInfo);
+            console.log(res);
+            localStorage.setItem("token",res.data.token);
+            localStorage.setItem("user",JSON.stringify(res.data.user));
+            navigate("/dashboard");
+        } catch (error) {
+            setErrors("Login failed. Please try again.")
         }
  
     }
