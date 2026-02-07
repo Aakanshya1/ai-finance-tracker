@@ -5,12 +5,18 @@ import jwt from "jsonwebtoken";
 
 export const registerUser = async (req,res)=>{
     try {
-        const {name,email,password}=req.body;
+        const {name,email,password,confirmPassword}=req.body;
         const existingUser= await User.findOne({email});
         if(existingUser){
             return res.status(400)
             .json({
                 message:"User already exists"
+            })
+        }
+        if(password!==confirmPassword){
+            return res.status(400)
+            .json({
+                message:"Passwords do not match"
             })
         }
         const salt = await bcrypt.genSalt(10);
@@ -53,7 +59,7 @@ export const loginUser = async(req,res)=>{
             })
         }
         const jwtToken = jwt.sign({
-            id:user._id,email:user.email
+            id:user._id,email:user.email,name:user.name 
         },
         process.env.JWT_SECRET,
         {expiresIn:'5h'}
@@ -61,7 +67,8 @@ export const loginUser = async(req,res)=>{
     res.status(200)
     .json({
         message:"Login successful",
-        token:jwtToken
+        token:jwtToken,
+        name:user.name
     })
     } catch (error) {
         return res.status(500)

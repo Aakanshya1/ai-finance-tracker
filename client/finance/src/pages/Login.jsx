@@ -28,7 +28,6 @@ function Login() {
     const handleSubmit= async(e)=>{
         e.preventDefault();
         const {email,password}=loginInfo;
-console.log(loginInfo);
         let newErrors={};
         if(!email){
             newErrors.email="Email is required";
@@ -38,12 +37,12 @@ console.log(loginInfo);
         }
         if(Object.keys(newErrors).length>0){
  setErrors(newErrors);
+ return;
         }
         try {
             const res = await loginUser(loginInfo);
-            console.log(res);
             localStorage.setItem("token",res.data.token);
-            localStorage.setItem("user",JSON.stringify(res.data.user));
+            localStorage.setItem("user",JSON.stringify(res.data.name));
             navigate("/dashboard");
         } catch (error) {
             setErrors("Login failed. Please try again.")

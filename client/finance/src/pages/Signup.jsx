@@ -44,12 +44,10 @@ function Signup() {
         }
         if(Object.keys(newErrors).length>0){
          setErrors(newErrors);
-        }
-        if(!newErrors.email && !newErrors.password && !newErrors.name && !newErrors.confirmPassword){
-            alert('signup successful')
+         return;
         }
         try {
-            const res = await registerUser(signupInfo);
+          await registerUser(signupInfo);
             alert('signup successful');
             navigate('/login');
         } catch (error) {
