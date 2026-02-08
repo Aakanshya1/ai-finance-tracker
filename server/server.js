@@ -4,11 +4,13 @@ import 'dotenv/config';
 import authRoutes from './routes/auth.routes.js'
 import connectDB from './config/db.js';
 import accountRoutes from './routes/account.routes.js';
+import incomeRoutes from './routes/income.routes.js';
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/auth', authRoutes);
+app.use('/income', incomeRoutes);
 app.use('/account', accountRoutes);
 
 app.get('/', (req,res)=>{
