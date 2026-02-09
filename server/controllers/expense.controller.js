@@ -47,7 +47,7 @@ export const getExpenses = async(req,res)=>{
     }
 }
 
-export const updateExpemse = async(req, res)=>{
+export const updateExpense = async(req, res)=>{
     try {
         const {_id}= req.params;
          const {amount,category,date,description,accountId}=req.body;
@@ -76,7 +76,15 @@ export const deleteExpense = async(req,res)=>{
         const {_id}=req.params;
         const userId = req.user._id;
         const expense = await Expense.findOneAndDelete({_id,userId});
+        if(!expense){
+             return res.status(404).json({message: "Expense record not found"});
+        }
+        res.status(200).json({
+            message:"Expense record deleted successfully"
+        })
     } catch (error) {
-        
+        res.status(500).json({
+            message:error.message
+        })
     }
 }
